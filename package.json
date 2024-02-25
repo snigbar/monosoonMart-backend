@@ -9,6 +9,7 @@
     }
   },
   "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only ./src/app/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint source --ignore-path .eslintignore --ext .ts",
     "lint:fix": "npx eslint src --fix",
@@ -20,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/express": "^4.17.21",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
     "eslint": "^8.57.0",
@@ -27,6 +29,7 @@
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"
   },
   "lint-staged": {
@@ -34,5 +37,16 @@
       "npx prettier --write src",
       "npx eslint src --fix"
     ]
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.2.0",
+    "nodemailer": "^6.9.10",
+    "zod": "^3.22.4"
   }
 }
