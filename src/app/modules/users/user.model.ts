@@ -31,7 +31,8 @@ const userSchema = new mongoose.Schema<TUser, TUserModel>(
 );
 
 userSchema.statics.isUserExists = async function (id: string) {
-  return await UserModel.findOne({ _id: id }).select('+password');
+  return await UserModel.findOne({ _id: id }).select('-password');
 };
+
 const UserModel = mongoose.model<TUser, TUserModel>('Users', userSchema);
 export default UserModel;
