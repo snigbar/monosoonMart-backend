@@ -2,12 +2,13 @@ import app from './app';
 
 import { Server } from 'http';
 import config from './configs/config';
+import mongoose from 'mongoose';
 
 let server: Server;
 
 async function main() {
   try {
-    // await mongoose.connect(config.mongoDBURL as string)
+    await mongoose.connect(config.mongoURI as string);
     server = app.listen(config.port, () =>
       // eslint-disable-next-line no-console
       console.log(`Running on port ${config.port}`),
