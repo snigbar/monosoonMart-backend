@@ -1,0 +1,58 @@
+import httpStatus from 'http-status';
+import AppError from '../../Errors/AppError';
+import UserModel from '../users/user.model';
+import { createToken } from '../../utils/generateToken';
+import config from '../../configs/config';
+import sendEmail from '../../utils/sendEmail';
+
+const getReactivaionToken = async (_id: string) => {
+  const toActivateUser = await UserModel.findOne({ _id });
+  if (!toActivateUser) {
+    throw new AppError('Unauthorized: No user Found', httpStatus.UNAUTHORIZED);
+  }
+
+  //   send email with activation token
+  if (toActivateUser._id && toActivateUser.email) {
+    const activationToken = createToken(
+      { _id: toActivateUser._id, email: toActivateUser.email },
+      '10min',
+    );
+
+    try {
+      // link
+      const activationLink = `${config.client_URL}/activate/${activationToken}/${toActivateUser._id}`;
+      //   html code
+      const html = `
+          <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+              <h2 style="color: #333; text-align: center;">Welcome to MonSoonMart!</h2>
+              <p style="font-size: 16px; color: #555; line-height: 1.6;">Thank you for signing up! To activate your account, please click the button below:</p>
+              <div style="text-align: center;">
+                <a href="${activationLink}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Activate Account</a>
+              </div>
+              <p style="font-size: 14px; color: #777; text-align: center; margin-top: 20px;">If the button above doesn't work, you can also copy and paste the following link into your browser:</p>
+              <p style="font-size: 14px; color: #777; text-align: center;"><a href="${activationLink}" style="color: #007bff; text-decoration: none;">${activationLink}</a></p>
+            </div>
+          </div>
+        `;
+      // send email
+      await sendEmail(
+        'Monsoon Mart: Activate Your Account',
+        'Click in the link to activate your account',
+        toActivateUser.email,
+        html,
+      );
+
+      return true;
+    } catch (error) {
+      throw new AppError('failed to send activation email', 500);
+    }
+  } else {
+    throw new AppError('failed to create user', 500);
+  }
+};
+const authServices = {
+  getReactivaionToken,
+};
+
+export default authServices;

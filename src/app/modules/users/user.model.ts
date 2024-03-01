@@ -61,8 +61,12 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 
-userSchema.statics.isUserExists = async function (email: string) {
-  return await UserModel.findOne({ email }).select('+password');
+userSchema.statics.isUserExistsById = async function (id: string) {
+  return await UserModel.findOne({ _id: id }).select('-password');
+};
+
+userSchema.statics.isUserExistsByEmail = async function (email: string) {
+  return await UserModel.findOne({ email }).select('-password');
 };
 
 const UserModel = mongoose.model<TUser, TUserModel>('Users', userSchema);
