@@ -1,6 +1,8 @@
+import { Schema } from 'mongoose';
 import { Model } from 'mongoose';
 
 export type TUser = {
+  _id?: Schema.Types.ObjectId;
   firstName: string;
   lastName: string;
   email: string;
@@ -16,4 +18,6 @@ export interface TUserModel extends Model<TUser> {
   isUserExistsById(id: string): Promise<TUser | null>;
   // eslint-disable-next-line no-unused-vars
   isUserExistsByEmail(email: string): Promise<TUser | null>;
+  // eslint-disable-next-line no-unused-vars
+  isPasswordMatched(password: string, hashedPassword: string): Promise<boolean>;
 }

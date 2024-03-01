@@ -2,6 +2,9 @@ import express from 'express';
 import authControllers from './auth.controller';
 const router = express.Router();
 
+// login
+router.post('/login', authControllers.login);
+
 // reactivate request
 router.post('/reactivate', authControllers.reActivationRequest);
 // activate acoount and verify

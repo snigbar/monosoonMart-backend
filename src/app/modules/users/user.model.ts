@@ -67,7 +67,14 @@ userSchema.statics.isUserExistsById = async function (id: string) {
 };
 
 userSchema.statics.isUserExistsByEmail = async function (email: string) {
-  return await UserModel.findOne({ email });
+  return await UserModel.findOne({ email }).select('+password');
+};
+
+userSchema.statics.isPasswordMatched = async function (
+  password,
+  hashedPassword,
+) {
+  return await bcrypt.compare(password, hashedPassword);
 };
 
 const UserModel = mongoose.model<TUser, TUserModel>('Users', userSchema);

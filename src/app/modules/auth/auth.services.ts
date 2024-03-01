@@ -6,6 +6,49 @@ import config from '../../configs/config';
 import sendEmail from '../../utils/sendEmail';
 import { verifyToken } from '../../utils/verifyToken';
 
+type loginCredential = {
+  email: string;
+  password: string;
+};
+
+// login
+const loginUser = async (payload: loginCredential) => {
+  const user = await UserModel.isUserExistsByEmail(payload.email);
+  // user exists
+  if (!user) {
+    throw new AppError("User doesn't exist", httpStatus.NOT_FOUND);
+  }
+  // if user deleted
+  if (user.isDeleted) {
+    throw new AppError("User doesn't exist", httpStatus.NOT_FOUND);
+  }
+  //  if password matched
+  const matchPassword = await UserModel.isPasswordMatched(
+    payload.password,
+    user.password as string,
+  );
+
+  if (!matchPassword) {
+    throw new AppError('invalid credentials', httpStatus.UNAUTHORIZED);
+  }
+
+  user.password = '';
+  // send auth token
+  if (!user.isVerified) {
+    return {
+      user,
+    };
+  }
+  const tokenData = {
+    _id: user._id,
+    email: user.email,
+    role: user.role,
+  };
+  const authToken = createToken(tokenData, config.jwt_auth_token, '2d');
+  return { user, authToken };
+};
+
+// get reactivation token
 const getReactivaionToken = async (_id: string) => {
   const toActivateUser = await UserModel.findOne({ _id });
   if (!toActivateUser) {
@@ -98,6 +141,7 @@ const verifyUser = async (token: string, id: string) => {
 const authServices = {
   getReactivaionToken,
   verifyUser,
+  loginUser,
 };
 
 export default authServices;
