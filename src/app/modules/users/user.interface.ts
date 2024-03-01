@@ -5,6 +5,10 @@ export type TUser = {
   lastName: string;
   email: string;
   password: string;
+  profileImage: string;
+  role: 'user' | 'seller' | 'admin';
+  isDeleted: boolean;
+  isVerified: boolean;
 };
 
 export interface TUserModel extends Model<TUser> {
