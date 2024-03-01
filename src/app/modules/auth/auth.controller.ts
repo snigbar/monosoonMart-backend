@@ -16,8 +16,21 @@ const reActivationRequest = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const verifyAccount = catchAsync(async (req: Request, res: Response) => {
+  const { id, token } = req.body;
+  const result = await authServices.verifyUser(token, id);
+
+  handleResponse(res, {
+    statusCode: 200,
+    success: true,
+    data: result,
+    message: 'Your account has been verified',
+  });
+});
+
 const authControllers = {
   reActivationRequest,
+  verifyAccount,
 };
 
 export default authControllers;

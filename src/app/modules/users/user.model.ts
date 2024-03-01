@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema<TUser, TUserModel>(
       type: String,
       min: 8,
       max: 20,
+      select: false,
       required: [true, 'password is required'],
     },
     profileImage: {
@@ -56,17 +57,17 @@ userSchema.pre('save', async function (next) {
 });
 
 // post save middleware / hook
-userSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
-});
+// userSchema.post('save', function (doc, next) {
+//   doc.password = '';
+//   next();
+// });
 
 userSchema.statics.isUserExistsById = async function (id: string) {
-  return await UserModel.findOne({ _id: id }).select('-password');
+  return await UserModel.findOne({ _id: id });
 };
 
 userSchema.statics.isUserExistsByEmail = async function (email: string) {
-  return await UserModel.findOne({ email }).select('-password');
+  return await UserModel.findOne({ email });
 };
 
 const UserModel = mongoose.model<TUser, TUserModel>('Users', userSchema);
