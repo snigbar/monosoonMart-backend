@@ -1,7 +1,7 @@
+import { createToken } from './../../utils/generateToken';
 import httpStatus from 'http-status';
 import AppError from '../../Errors/AppError';
 import UserModel from '../users/user.model';
-import { createToken } from '../../utils/generateToken';
 import config from '../../configs/config';
 import sendEmail from '../../utils/sendEmail';
 import { verifyToken } from '../../utils/verifyToken';
@@ -16,6 +16,7 @@ const getReactivaionToken = async (_id: string) => {
   if (toActivateUser._id && toActivateUser.email) {
     const activationToken = createToken(
       { _id: toActivateUser._id, email: toActivateUser.email },
+      config.jwt_activate_token,
       '10min',
     );
 
@@ -85,7 +86,13 @@ const verifyUser = async (token: string, id: string) => {
     throw new AppError('Failed to verify user', httpStatus.NOT_FOUND);
   }
 
-  return newUser;
+  const tokenData = {
+    _id: newUser._id,
+    email: newUser.email,
+    role: newUser.role,
+  };
+  const authToken = createToken(tokenData, config.jwt_auth_token, '2d');
+  return { newUser, authToken };
 };
 
 const authServices = {

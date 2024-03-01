@@ -1,7 +1,11 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import config from '../configs/config';
-export const createToken = (data: JwtPayload, expiresIn: string | number) => {
-  const token = jwt.sign(data, config.jwt_activate_token as string, {
+
+export const createToken = (
+  data: JwtPayload,
+  jwtSecret: string,
+  expiresIn: string | number,
+) => {
+  const token = jwt.sign(data, jwtSecret, {
     expiresIn,
   });
   return token;
