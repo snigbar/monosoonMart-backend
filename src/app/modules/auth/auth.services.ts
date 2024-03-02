@@ -41,8 +41,8 @@ const loginUser = async (payload: loginCredential) => {
   }
   const tokenData = {
     _id: user._id,
-    email: user.email,
     role: user.role,
+    isVerified: user.isVerified,
   };
   const authToken = createToken(tokenData, config.jwt_auth_token, '2d');
   return { user, authToken };
@@ -131,8 +131,8 @@ const verifyUser = async (token: string, id: string) => {
 
   const tokenData = {
     _id: newUser._id,
-    email: newUser.email,
     role: newUser.role,
+    isVerified: newUser.isVerified,
   };
   const authToken = createToken(tokenData, config.jwt_auth_token, '2d');
   return { newUser, authToken };

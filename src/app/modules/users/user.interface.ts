@@ -11,6 +11,7 @@ export type TUser = {
   role: 'user' | 'seller' | 'admin';
   isDeleted: boolean;
   isVerified: boolean;
+  passwordChangedAt?: Date;
 };
 
 export interface TUserModel extends Model<TUser> {
@@ -20,4 +21,11 @@ export interface TUserModel extends Model<TUser> {
   isUserExistsByEmail(email: string): Promise<TUser | null>;
   // eslint-disable-next-line no-unused-vars
   isPasswordMatched(password: string, hashedPassword: string): Promise<boolean>;
+
+  isJwtIssuedBeforePasswordChange(
+    // eslint-disable-next-line no-unused-vars
+    passwordChangeAt: Date,
+    // eslint-disable-next-line no-unused-vars
+    jwtTimeStamp: number,
+  ): Promise<boolean>;
 }

@@ -43,6 +43,7 @@ const userSchema = new mongoose.Schema<TUser, TUserModel>(
       default: false,
       required: true,
     },
+    passwordChangedAt: Date,
   },
   { timestamps: true },
 );
@@ -69,12 +70,21 @@ userSchema.statics.isUserExistsById = async function (id: string) {
 userSchema.statics.isUserExistsByEmail = async function (email: string) {
   return await UserModel.findOne({ email }).select('+password');
 };
-
+// match password
 userSchema.statics.isPasswordMatched = async function (
   password,
   hashedPassword,
 ) {
   return await bcrypt.compare(password, hashedPassword);
+};
+
+// check password change time
+userSchema.statics.isJwtIssuedBeforePasswordChange = function (
+  passwordChangedAt,
+  jwtIssueTimeStamp,
+) {
+  const passwordChangeTime = new Date(passwordChangedAt).getTime() / 1000;
+  return passwordChangeTime > jwtIssueTimeStamp;
 };
 
 const UserModel = mongoose.model<TUser, TUserModel>('Users', userSchema);
