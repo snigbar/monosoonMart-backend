@@ -6,7 +6,9 @@ import { createToken } from '../../utils/generateToken';
 import sendEmail from '../../utils/sendEmail';
 import { TUser } from './user.interface';
 import UserModel from './user.model';
+import { TUserType } from './user.constants';
 
+// create user
 const createUserInDB = async function name(user: TUser, path: string) {
   // validate if user exists
   const findUser = await UserModel.isUserExistsByEmail(user.email);
@@ -60,6 +62,12 @@ const createUserInDB = async function name(user: TUser, path: string) {
   return result;
 };
 
+// getUserFromDB
+const getUserFromDB = async (_id: string, role: TUserType) => {
+  return await UserModel.findOne({ _id, role });
+};
+
 export default {
   createUserInDB,
+  getUserFromDB,
 };

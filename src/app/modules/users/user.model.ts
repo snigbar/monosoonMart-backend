@@ -33,6 +33,12 @@ const userSchema = new mongoose.Schema<TUser, TUserModel>(
       type: String,
       required: [true, 'profileImage is required'],
     },
+    role: {
+      type: String,
+      enum: ['user', 'admin', 'seller'], // Define the allowed values as numbers
+      default: 'user',
+      required: true,
+    },
     isVerified: {
       type: Boolean,
       default: false,

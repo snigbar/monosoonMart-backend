@@ -1,20 +1,22 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
-import { TUser } from '../modules/users/user.interface';
 import catchAsync from '../utils/catchAsyncRequest';
 import AppError from '../Errors/AppError';
 import httpStatus from 'http-status';
 import config from '../configs/config';
 import UserModel from '../modules/users/user.model';
+import { TUserType } from '../modules/users/user.constants';
 
-export const auth = (...roles: TUser['role'][]) => {
+export const auth = (...roles: TUserType[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies?.auth_token as string;
     // validating if role is available
+
     if (!token) {
       throw new AppError('you are not authorized', httpStatus.UNAUTHORIZED);
     }
     const decoded = jwt.verify(token, config.jwt_auth_token) as JwtPayload;
+
     const { role, _id, iat } = decoded;
     // find the use
     const user = await UserModel.findById(_id);
