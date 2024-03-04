@@ -70,10 +70,24 @@ const verifyAccount = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// logout
+
+const logOut = catchAsync(async (req: Request, res: Response) => {
+  // set null cookie
+  res.cookie('auth_token', '', { expires: new Date(0) });
+
+  handleResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'user logged out',
+  });
+});
+
 const authControllers = {
   reActivationRequest,
   verifyAccount,
   login,
+  logOut,
 };
 
 export default authControllers;
