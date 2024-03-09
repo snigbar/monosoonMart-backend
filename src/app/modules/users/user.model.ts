@@ -50,6 +50,7 @@ const userSchema = new mongoose.Schema<TUser, TUserModel>(
       required: true,
     },
     passwordChangedAt: Date,
+    verificationToken: String,
   },
   { timestamps: true },
 );

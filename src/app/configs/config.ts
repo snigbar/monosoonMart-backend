@@ -10,6 +10,7 @@ export default {
   smtp_mail_pass: process.env.MAIL_PASSWORD,
   jwt_activate_token: process.env.JWT_ACTIVATE_TOKEN,
   jwt_auth_token: process.env.JWT_AUTH_TOKEN,
+  jwt_forgotpass_token: process.env.JWT_FORGOTPASS_TOKEN,
   app_enviroment: process.env.ENVIROMENT,
   smtp_host: process.env.SMTP_HOST,
   smtp_sender_email: process.env.SMTP_SENDER_EMAIL,

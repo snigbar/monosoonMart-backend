@@ -3,7 +3,9 @@ import authControllers from './auth.controller';
 import zodValidationHandler from '../../middlewares/zodValidationHandler';
 import {
   activationValidationSchema,
+  forgotPasswordValidationSchema,
   loginValidationSchema,
+  resetPasswordValidationSchema,
 } from './auth.validation';
 const router = express.Router();
 
@@ -27,7 +29,21 @@ router.post(
   authControllers.verifyAccount,
 );
 
+// forgot password request
+router.post(
+  '/forgot-password',
+  zodValidationHandler(forgotPasswordValidationSchema),
+  authControllers.forgotPasswordRequest,
+);
+
+// reset password
+router.post(
+  '/reset-password',
+  zodValidationHandler(resetPasswordValidationSchema),
+  authControllers.resetPassword,
+);
+
 // logout route
-router.post('/logout');
+router.post('/logout', authControllers.logOut);
 
 export const authRoutes = router;

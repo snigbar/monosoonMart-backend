@@ -5,9 +5,15 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
 import appRouter from './routes/appRouter';
+import config from './configs/config';
 
 const app: Application = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: config.client_URL,
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

@@ -12,6 +12,7 @@ export type TUser = {
   isDeleted: boolean;
   isVerified: boolean;
   passwordChangedAt?: Date;
+  verificationToken?: string;
 };
 
 export interface TUserModel extends Model<TUser> {

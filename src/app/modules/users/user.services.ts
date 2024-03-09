@@ -23,6 +23,8 @@ const createUserInDB = async function name(user: TUser, path: string) {
   // result
   const result = await UserModel.create(user);
 
+  // send verification mail
+
   if (result && result._id && result.email) {
     const activationToken = createToken(
       { _id: result._id, email: result.email },
@@ -51,15 +53,19 @@ const createUserInDB = async function name(user: TUser, path: string) {
         result.email,
         html,
       );
+      const user = await UserModel.findByIdAndUpdate(result._id, {
+        verificationToken: activationToken,
+      });
+      user.password = '';
+      return user;
     } catch (error) {
+      deleteFile(path);
       throw new AppError('failed to send activation email', 500);
     }
   } else {
     deleteFile(path);
     throw new AppError('failed to create user', 500);
   }
-
-  return result;
 };
 
 // getUserFromDB

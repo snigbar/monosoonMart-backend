@@ -5,5 +5,6 @@ export const verifyToken = (
   secret: string,
 ): JwtPayload | null => {
   const data = jwt.verify(token, secret);
+
   return data as JwtPayload;
 };

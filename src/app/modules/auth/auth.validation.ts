@@ -18,3 +18,19 @@ export const activationValidationSchema = z.object({
     id: z.string(),
   }),
 });
+
+export const forgotPasswordValidationSchema = z.object({
+  body: z.object({
+    email: z.string().email({ message: 'invalid email' }),
+  }),
+});
+
+export const resetPasswordValidationSchema = z.object({
+  body: z.object({
+    payload: z.object({
+      id: z.string(),
+      password: z.string(),
+    }),
+    token: z.string(),
+  }),
+});
