@@ -91,7 +91,7 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 
   const result = await authServices.resetPassword(payload, token);
 
-  res.cookie('auth_token', '', { expires: new Date(0) });
+  res.cookie('auth_token', '', { expires: new Date(0), httpOnly: true });
 
   handleResponse(res, {
     statusCode: 200,
@@ -103,7 +103,7 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 // logout
 const logOut = catchAsync(async (req: Request, res: Response) => {
   // set null cookie
-  res.cookie('auth_token', '', { expires: new Date(0) });
+  res.cookie('auth_token', '', { expires: new Date(0), httpOnly: true });
 
   handleResponse(res, {
     statusCode: 200,

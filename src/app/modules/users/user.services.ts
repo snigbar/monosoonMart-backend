@@ -28,7 +28,7 @@ const createUserInDB = async function name(user: TUser, path: string) {
   if (result && result._id && result.email) {
     const activationToken = createToken(
       { _id: result._id, email: result.email },
-      config.jwt_activate_token,
+      config.jwt_activate_token as string,
       '10min',
     );
     try {
@@ -56,7 +56,7 @@ const createUserInDB = async function name(user: TUser, path: string) {
       const user = await UserModel.findByIdAndUpdate(result._id, {
         verificationToken: activationToken,
       });
-      user.password = '';
+      if (user) user.password = '';
       return user;
     } catch (error) {
       deleteFile(path);
@@ -70,7 +70,9 @@ const createUserInDB = async function name(user: TUser, path: string) {
 
 // getUserFromDB
 const getUserFromDB = async (_id: string, role: TUserType) => {
-  return await UserModel.findOne({ _id, role });
+  return await UserModel.findOne({ _id, role }).select(
+    '-createdAt -updatedAt -passwordChangedAt',
+  );
 };
 
 export default {

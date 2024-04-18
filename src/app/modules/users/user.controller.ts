@@ -26,7 +26,7 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
   handleResponse(res, {
     statusCode: 201,
     success: true,
-    message: 'user found',
+    message: 'User retrieval successful',
     data: result,
   });
 });

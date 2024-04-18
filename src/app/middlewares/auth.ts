@@ -15,9 +15,17 @@ export const auth = (...roles: TUserType[]) => {
     if (!token) {
       throw new AppError('you are not authorized', httpStatus.UNAUTHORIZED);
     }
-    const decoded = jwt.verify(token, config.jwt_auth_token) as JwtPayload;
+    const decoded = jwt.verify(
+      token,
+      config.jwt_auth_token as string,
+    ) as JwtPayload;
 
     const { role, _id, iat } = decoded;
+    // check if the token is valid
+    if (!decoded) {
+      throw new AppError('user not found', httpStatus.NOT_FOUND);
+    }
+
     // find the use
     const user = await UserModel.findById(_id);
     // if no user
@@ -38,7 +46,7 @@ export const auth = (...roles: TUserType[]) => {
       user.passwordChangedAt &&
       (await UserModel.isJwtIssuedBeforePasswordChange(
         user.passwordChangedAt,
-        iat,
+        iat as number,
       ))
     ) {
       throw new AppError('you are unauthorized', httpStatus.UNAUTHORIZED);
